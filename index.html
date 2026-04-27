@@ -3,202 +3,225 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <meta name="description" content="Steuererklarung 2025 fur Ehepaare - Bilingual DE/ES">
+    <meta name="description" content="Steuererklarung 2025 fur Ehepaare">
     <meta name="theme-color" content="#1a237e">
     <link rel="manifest" href="./manifest.json">
-    <title>SteuerApp 2025 - Ehegattenveranlagung</title>
+    <title>SteuerApp 2025</title>
     <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
-    <div id="loading-screen" class="loading-screen">
-        <div class="loader-content">
-            <span class="loader-icon">📊</span>
-            <h2>SteuerApp 2025</h2>
-            <div class="spinner"></div>
-            <p>Wird geladen...</p>
-        </div>
+
+<div id="loading-screen" class="loading-screen">
+    <div class="loader-content">
+        <span class="loader-icon">📊</span>
+        <h2>SteuerApp 2025</h2>
+        <div class="spinner"></div>
+        <p>Wird geladen...</p>
     </div>
+</div>
 
-    <header class="app-header">
-        <h1 data-i18n="appName">SteuerApp 2025</h1>
-        <div class="language-toggle">
-            <button class="lang-btn active" data-lang="DE">DE</button>
-            <span class="lang-divider">|</span>
-            <button class="lang-btn" data-lang="ES">ES</button>
-        </div>
-        <div class="steuerjahr-badge">2025</div>
-    </header>
+<header class="app-header">
+    <h1 data-i18n="appName">SteuerApp 2025</h1>
+    <div class="language-toggle">
+        <button class="lang-btn active" data-lang="DE">DE</button>
+        <span class="lang-divider">|</span>
+        <button class="lang-btn" data-lang="ES">ES</button>
+    </div>
+    <button id="btn-ayuda" style="background:#fff;color:#1a237e;border:none;border-radius:50%;width:28px;height:28px;font-weight:700;font-size:1rem;cursor:pointer;" title="Ayuda">?</button>
+    <div class="steuerjahr-badge">2025</div>
+</header>
 
-    <nav class="main-nav">
-        <ul class="desktop-nav">
-            <li data-step="1" class="active"><span>1</span><span>Einkommen</span></li>
-            <li data-step="2"><span>2</span><span>Versicherung</span></li>
-            <li data-step="3"><span>3</span><span>Haushalt</span></li>
-            <li data-step="4"><span>4</span><span>Kinder</span></li>
-            <li data-step="5"><span>5</span><span>Belege</span></li>
-            <li data-step="6"><span>6</span><span>ELSTER</span></li>
-            <li data-step="7"><span>7</span><span>PDF</span></li>
-        </ul>
-        <div class="mobile-bottom-nav">
-            <button class="nav-item active" data-step="1"><span class="icon">💶</span><span class="label">Einkommen</span></button>
-            <button class="nav-item" data-step="2"><span class="icon">🛡️</span><span class="label">Versich.</span></button>
-            <button class="nav-item scan-button" data-step="scan"><span class="icon">📸</span><span class="label">Scannen</span></button>
-            <button class="nav-item" data-step="6"><span class="icon">📤</span><span class="label">ELSTER</span></button>
-            <button class="nav-item" data-step="7"><span class="icon">📄</span><span class="label">PDF</span></button>
-        </div>
-    </nav>
+<nav class="main-nav">
+    <ul class="desktop-nav">
+        <li data-step="1" class="active"><span>1</span><span>Einkommen</span></li>
+        <li data-step="2"><span>2</span><span>Versicherung</span></li>
+        <li data-step="3"><span>3</span><span>Haushalt</span></li>
+        <li data-step="4"><span>4</span><span>Kinder</span></li>
+        <li data-step="5"><span>5</span><span>Belege</span></li>
+        <li data-step="6"><span>6</span><span>ELSTER</span></li>
+        <li data-step="7"><span>7</span><span>PDF</span></li>
+    </ul>
+    <div class="mobile-bottom-nav">
+        <button class="nav-item active" data-step="1"><span class="icon">💶</span><span class="label">Einkommen</span></button>
+        <button class="nav-item" data-step="2"><span class="icon">🛡️</span><span class="label">Versich.</span></button>
+        <button class="nav-item scan-button" data-step="scan"><span class="icon">📸</span><span class="label">Scannen</span></button>
+        <button class="nav-item" data-step="6"><span class="icon">📤</span><span class="label">ELSTER</span></button>
+        <button class="nav-item" data-step="7"><span class="icon">📄</span><span class="label">PDF</span></button>
+    </div>
+</nav>
 
-    <main class="app-content">
+<main class="app-content">
 
-        <!-- PANEL 1: INGRESOS -->
-        <section id="input-panel" class="panel-input">
-            <h2 data-i18n="veranlagungsartWahl">Wahl der Veranlagungsart</h2>
-            <div class="veranlagung-selector">
-                <button id="btn-einzeln" class="tax-option"><span class="option-title" data-i18n="individual">Einzelveranlagung</span></button>
-                <div class="vs-divider">VS</div>
-                <button id="btn-zusammen" class="tax-option active"><span class="option-title" data-i18n="conjunta">Zusammenveranlagung</span></button>
-            </div>
-            <div class="ehepartner-input partner-a">
-                <h3><span class="partner-label">Person A</span></h3>
-                <label>Bruttoarbeitslohn</label><div class="input-group"><input type="number" id="einkommen-a" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR</span></div>
-                <label>Einbehaltene Lohnsteuer</label><div class="input-group"><input type="number" id="lohnsteuer-a" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR</span></div>
-                <label>Fahrtkosten (km einfache Strecke)</label><div class="input-group"><input type="number" id="fahrtkosten-a" class="steuer-input" placeholder="0"><span class="currency-symbol">km</span></div>
-                <label>Arbeitstage pro Jahr</label><div class="input-group"><input type="number" id="arbeitstage-a" class="steuer-input" placeholder="220" value="220"></div>
-                <label>Arbeitsmittel</label><div class="input-group"><input type="number" id="arbeitsmittel-a" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR</span></div>
-                <label>Fortbildungskosten</label><div class="input-group"><input type="number" id="fortbildung-a" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR</span></div>
-                <label>Homeoffice-Tage (6 EUR/Tag, max. 210)</label><div class="input-group"><input type="number" id="homeoffice-a" class="steuer-input" placeholder="0" max="210"></div>
-            </div>
-            <div class="plus-divider">+</div>
-            <div class="ehepartner-input partner-b">
-                <h3><span class="partner-label">Person B</span></h3>
-                <label>Bruttoarbeitslohn</label><div class="input-group"><input type="number" id="einkommen-b" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR</span></div>
-                <label>Einbehaltene Lohnsteuer</label><div class="input-group"><input type="number" id="lohnsteuer-b" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR</span></div>
-                <label>Fahrtkosten (km einfache Strecke)</label><div class="input-group"><input type="number" id="fahrtkosten-b" class="steuer-input" placeholder="0"><span class="currency-symbol">km</span></div>
-                <label>Arbeitstage pro Jahr</label><div class="input-group"><input type="number" id="arbeitstage-b" class="steuer-input" placeholder="220" value="220"></div>
-                <label>Arbeitsmittel</label><div class="input-group"><input type="number" id="arbeitsmittel-b" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR</span></div>
-                <label>Fortbildungskosten</label><div class="input-group"><input type="number" id="fortbildung-b" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR</span></div>
-                <label>Homeoffice-Tage (6 EUR/Tag, max. 210)</label><div class="input-group"><input type="number" id="homeoffice-b" class="steuer-input" placeholder="0" max="210"></div>
-            </div>
-        </section>
+<!-- PANEL AYUDA -->
+<section id="ayuda-panel" class="panel-input hidden">
+    <h2>❓ Ayuda / Hilfe</h2>
+    <div style="background:#e8eaf6;padding:1rem;border-radius:8px;margin-bottom:1rem;">
+        <h3>📋 Navegacion</h3>
+        <p>Use los botones <strong>1 al 7</strong> para moverse entre las secciones. En movil use la barra inferior.</p>
+    </div>
+    <div style="background:#e8f5e9;padding:1rem;border-radius:8px;margin-bottom:1rem;">
+        <h3>💶 Panel 1 - Ingresos</h3>
+        <p>Introduzca el salario bruto, impuestos retenidos y gastos laborales de cada conyuge.</p>
+    </div>
+    <div style="background:#fff3e0;padding:1rem;border-radius:8px;margin-bottom:1rem;">
+        <h3>🛡️ Panel 2 - Seguros</h3>
+        <p>Registre todos los seguros: salud, pension, Riester, Rurup, responsabilidad civil, mascotas.</p>
+    </div>
+    <div style="background:#f3e5f5;padding:1rem;border-radius:8px;margin-bottom:1rem;">
+        <h3>🏠 Panel 3 - Hogar</h3>
+        <p>Servicios domesticos, artesanos, deshollinador, ayuda domestica.</p>
+    </div>
+    <div style="background:#e0f7fa;padding:1rem;border-radius:8px;margin-bottom:1rem;">
+        <h3>👶 Panel 4 - Hijos</h3>
+        <p>Numero de hijos, gastos de guarderia, colegio, manutencion (solo transferencia en 2025).</p>
+    </div>
+    <div style="background:#fce4ec;padding:1rem;border-radius:8px;margin-bottom:1rem;">
+        <h3>📎 Panel 5 - Documentos</h3>
+        <p>Arrastre archivos o use los botones para adjuntar PDF, JPG o PNG (max 10 MB).</p>
+    </div>
+    <div style="background:#e8eaf6;padding:1rem;border-radius:8px;margin-bottom:1rem;">
+        <h3>📤 Panel 6 - ELSTER</h3>
+        <p>Genere el archivo XML para enviar electronicamente al Finanzamt. Necesita Steuer-ID e IBAN.</p>
+    </div>
+    <div style="background:#e8f5e9;padding:1rem;border-radius:8px;margin-bottom:1rem;">
+        <h3>📄 Panel 7 - PDF</h3>
+        <p>Genere un documento imprimible con todos los datos de su declaracion.</p>
+    </div>
+    <div style="background:#ffebee;padding:1rem;border-radius:8px;margin-bottom:1rem;">
+        <h3>⚠️ Importante 2025</h3>
+        <p>Los pagos de manutencion solo son deducibles mediante <strong>transferencia bancaria</strong>. No se admiten pagos en efectivo.</p>
+    </div>
+</section>
 
-        <!-- PANEL 2: SEGUROS -->
-        <section id="versicherung-panel" class="panel-input hidden">
-            <h2>Versicherungen / Seguros</h2>
-            <div class="ehepartner-input partner-a"><h3>Person A</h3>
-                <label>Krankenversicherung</label><div class="input-group"><input type="number" id="kv-a" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
-                <label>Pflegeversicherung</label><div class="input-group"><input type="number" id="pv-a" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
-                <label>Rentenversicherung</label><div class="input-group"><input type="number" id="rv-a" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
-                <label>Riester-Rente</label><div class="input-group"><input type="number" id="riester-a" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
-                <label>Rurup-Rente</label><div class="input-group"><input type="number" id="ruerup-a" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
-                <label>Berufsunfahigkeitsversicherung</label><div class="input-group"><input type="number" id="bu-a" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
-                <label>Haftpflichtversicherung</label><div class="input-group"><input type="number" id="haftpflicht-a" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
-                <label>Hundesteuer / Haustierversicherung</label><div class="input-group"><input type="number" id="hund-a" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
-            </div>
-            <div class="ehepartner-input partner-b"><h3>Person B</h3>
-                <label>Krankenversicherung</label><div class="input-group"><input type="number" id="kv-b" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
-                <label>Pflegeversicherung</label><div class="input-group"><input type="number" id="pv-b" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
-                <label>Rentenversicherung</label><div class="input-group"><input type="number" id="rv-b" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
-                <label>Riester-Rente</label><div class="input-group"><input type="number" id="riester-b" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
-                <label>Rurup-Rente</label><div class="input-group"><input type="number" id="ruerup-b" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
-                <label>Berufsunfahigkeitsversicherung</label><div class="input-group"><input type="number" id="bu-b" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
-                <label>Haftpflichtversicherung</label><div class="input-group"><input type="number" id="haftpflicht-b" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
-                <label>Hundesteuer / Haustierversicherung</label><div class="input-group"><input type="number" id="hund-b" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
-            </div>
-        </section>
+<!-- PANEL 1: INGRESOS -->
+<section id="input-panel" class="panel-input">
+    <h2>Wahl der Veranlagungsart</h2>
+    <div class="veranlagung-selector">
+        <button id="btn-einzeln" class="tax-option"><span class="option-title">Einzelveranlagung</span></button>
+        <div class="vs-divider">VS</div>
+        <button id="btn-zusammen" class="tax-option active"><span class="option-title">Zusammenveranlagung</span></button>
+    </div>
+    <div class="ehepartner-input partner-a">
+        <h3>Person A</h3>
+        <label>Bruttoarbeitslohn</label><div class="input-group"><input type="number" id="einkommen-a" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR</span></div>
+        <label>Einbehaltene Lohnsteuer</label><div class="input-group"><input type="number" id="lohnsteuer-a" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR</span></div>
+        <label>Fahrtkosten (km)</label><div class="input-group"><input type="number" id="fahrtkosten-a" class="steuer-input" placeholder="0"><span class="currency-symbol">km</span></div>
+        <label>Arbeitstage</label><div class="input-group"><input type="number" id="arbeitstage-a" class="steuer-input" placeholder="220" value="220"></div>
+        <label>Arbeitsmittel</label><div class="input-group"><input type="number" id="arbeitsmittel-a" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR</span></div>
+        <label>Fortbildung</label><div class="input-group"><input type="number" id="fortbildung-a" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR</span></div>
+        <label>Homeoffice-Tage</label><div class="input-group"><input type="number" id="homeoffice-a" class="steuer-input" placeholder="0" max="210"></div>
+    </div>
+    <div class="plus-divider">+</div>
+    <div class="ehepartner-input partner-b">
+        <h3>Person B</h3>
+        <label>Bruttoarbeitslohn</label><div class="input-group"><input type="number" id="einkommen-b" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR</span></div>
+        <label>Einbehaltene Lohnsteuer</label><div class="input-group"><input type="number" id="lohnsteuer-b" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR</span></div>
+        <label>Fahrtkosten (km)</label><div class="input-group"><input type="number" id="fahrtkosten-b" class="steuer-input" placeholder="0"><span class="currency-symbol">km</span></div>
+        <label>Arbeitstage</label><div class="input-group"><input type="number" id="arbeitstage-b" class="steuer-input" placeholder="220" value="220"></div>
+        <label>Arbeitsmittel</label><div class="input-group"><input type="number" id="arbeitsmittel-b" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR</span></div>
+        <label>Fortbildung</label><div class="input-group"><input type="number" id="fortbildung-b" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR</span></div>
+        <label>Homeoffice-Tage</label><div class="input-group"><input type="number" id="homeoffice-b" class="steuer-input" placeholder="0" max="210"></div>
+    </div>
+</section>
 
-        <!-- PANEL 3: HAUSHALT -->
-        <section id="haushalt-panel" class="panel-input hidden">
-            <h2>Haushalt / Hogar</h2>
-            <label>Haushaltsnahe Dienstleistungen</label><div class="input-group"><input type="number" id="haushalt-dienst" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
-            <label>Handwerkerrechnungen (max. 6.000 EUR)</label><div class="input-group"><input type="number" id="handwerker" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
-            <label>Schornsteinfeger</label><div class="input-group"><input type="number" id="schornstein" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
-            <label>Haushaltshilfe / Minijob</label><div class="input-group"><input type="number" id="haushaltshilfe" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
-        </section>
+<!-- PANEL 2: SEGUROS -->
+<section id="versicherung-panel" class="panel-input hidden">
+    <h2>Versicherungen / Seguros</h2>
+    <div class="ehepartner-input partner-a"><h3>Person A</h3>
+        <label>Krankenversicherung</label><div class="input-group"><input type="number" id="kv-a" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
+        <label>Pflegeversicherung</label><div class="input-group"><input type="number" id="pv-a" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
+        <label>Rentenversicherung</label><div class="input-group"><input type="number" id="rv-a" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
+        <label>Riester-Rente</label><div class="input-group"><input type="number" id="riester-a" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
+        <label>Rurup-Rente</label><div class="input-group"><input type="number" id="ruerup-a" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
+        <label>Berufsunfahigkeit</label><div class="input-group"><input type="number" id="bu-a" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
+        <label>Haftpflicht</label><div class="input-group"><input type="number" id="haftpflicht-a" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
+        <label>Hundesteuer</label><div class="input-group"><input type="number" id="hund-a" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
+    </div>
+    <div class="ehepartner-input partner-b"><h3>Person B</h3>
+        <label>Krankenversicherung</label><div class="input-group"><input type="number" id="kv-b" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
+        <label>Pflegeversicherung</label><div class="input-group"><input type="number" id="pv-b" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
+        <label>Rentenversicherung</label><div class="input-group"><input type="number" id="rv-b" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
+        <label>Riester-Rente</label><div class="input-group"><input type="number" id="riester-b" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
+        <label>Rurup-Rente</label><div class="input-group"><input type="number" id="ruerup-b" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
+        <label>Berufsunfahigkeit</label><div class="input-group"><input type="number" id="bu-b" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
+        <label>Haftpflicht</label><div class="input-group"><input type="number" id="haftpflicht-b" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
+        <label>Hundesteuer</label><div class="input-group"><input type="number" id="hund-b" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
+    </div>
+</section>
 
-        <!-- PANEL 4: KINDER -->
-        <section id="kinder-panel" class="panel-input hidden">
-            <h2>Kinder / Hijos</h2>
-            <label>Anzahl Kinder</label><div class="input-group"><input type="number" id="kinder-anzahl" class="steuer-input" placeholder="0" min="0" max="20"></div>
-            <label>Kinderbetreuungskosten</label><div class="input-group"><input type="number" id="kinderbetreuung" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
-            <label>Schulgeld</label><div class="input-group"><input type="number" id="schulgeld" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
-            <label>Unterhaltszahlungen (nur Bankuberweisung 2025!)</label><div class="input-group"><input type="number" id="unterhalt" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
-        </section>
+<!-- PANEL 3: HAUSHALT -->
+<section id="haushalt-panel" class="panel-input hidden">
+    <h2>Haushalt / Hogar</h2>
+    <label>Haushaltsnahe Dienstleistungen</label><div class="input-group"><input type="number" id="haushalt-dienst" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
+    <label>Handwerkerrechnungen</label><div class="input-group"><input type="number" id="handwerker" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
+    <label>Schornsteinfeger</label><div class="input-group"><input type="number" id="schornstein" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
+    <label>Haushaltshilfe</label><div class="input-group"><input type="number" id="haushaltshilfe" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
+</section>
 
-        <!-- PANEL 5: BELEGE -->
-        <section id="belege-panel" class="panel-input hidden">
-            <h2>📎 Belege / Documentos adjuntos</h2>
-            <div id="dropzone" class="dropzone">
-                <div class="dropzone-inhalt">
-                    <span class="dropzone-icon">📁</span>
-                    <p>Arrastre aqui sus documentos</p>
-                    <p class="dropzone-sub">PDF, JPG, PNG - max. 10 MB</p>
-                    <button id="btn-cargar-archivo" class="btn-upload">📂 Dateien auswahlen</button>
-                    <button id="btn-escanear" class="btn-upload">📷 Escanear con camara</button>
-                </div>
-                <input type="file" id="file-input" accept=".pdf,.jpg,.jpeg,.png" multiple hidden>
-                <input type="file" id="camera-input" accept="image/*" capture="environment" hidden>
-            </div>
-            <div id="belege-liste" class="belege-liste"><h3>Dokumente (0)</h3><div id="belege-container"></div></div>
-        </section>
+<!-- PANEL 4: KINDER -->
+<section id="kinder-panel" class="panel-input hidden">
+    <h2>Kinder / Hijos</h2>
+    <label>Anzahl Kinder</label><div class="input-group"><input type="number" id="kinder-anzahl" class="steuer-input" placeholder="0" min="0" max="20"></div>
+    <label>Kinderbetreuungskosten</label><div class="input-group"><input type="number" id="kinderbetreuung" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
+    <label>Schulgeld</label><div class="input-group"><input type="number" id="schulgeld" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
+    <label>Unterhalt (nur Bankuberweisung 2025)</label><div class="input-group"><input type="number" id="unterhalt" class="steuer-input" placeholder="0"><span class="currency-symbol">EUR/Jahr</span></div>
+</section>
 
-        <!-- PANEL 6: ELSTER -->
-        <section id="elster-panel" class="panel-input hidden">
-            <h2>📤 ELSTER Export</h2>
-            <p style="margin-bottom:1rem;">Generieren Sie die XML-Datei fur das Finanzamt.</p>
-            <label>Steuer-ID Person A (11 Ziffern)</label>
-            <input type="text" id="elster-steuerid-a" class="steuer-input" placeholder="12345678901" maxlength="11" style="margin-bottom:0.5rem;">
-            <label>Steuer-ID Person B (11 Ziffern)</label>
-            <input type="text" id="elster-steuerid-b" class="steuer-input" placeholder="12345678901" maxlength="11" style="margin-bottom:0.5rem;">
-            <label>IBAN (deutsche IBAN)</label>
-            <input type="text" id="elster-iban" class="steuer-input" placeholder="DE..." style="margin-bottom:0.5rem;">
-            <button id="btn-elster-generieren" class="btn-upload" style="width:100%; margin-bottom:0.5rem;">📄 XML generieren</button>
-            <button id="btn-elster-herunterladen" class="btn-upload" style="width:100%; background:#2e7d32; display:none;">📥 XML herunterladen</button>
-            <div id="elster-status" style="margin-top:1rem; padding:0.75rem; border-radius:8px; display:none;"></div>
-        </section>
+<!-- PANEL 5: BELEGE -->
+<section id="belege-panel" class="panel-input hidden">
+    <h2>📎 Belege / Documentos adjuntos</h2>
+    <div id="dropzone" class="dropzone">
+        <span class="dropzone-icon">📁</span>
+        <p>Arrastre aqui sus documentos</p>
+        <p class="dropzone-sub">PDF, JPG, PNG - max. 10 MB</p>
+        <button id="btn-cargar-archivo" class="btn-upload" type="button">📂 Dateien auswahlen</button>
+        <button id="btn-escanear" class="btn-upload" type="button">📷 Escanear con camara</button>
+        <input type="file" id="file-input" accept=".pdf,.jpg,.jpeg,.png" multiple hidden>
+        <input type="file" id="camera-input" accept="image/*" capture="environment" hidden>
+    </div>
+    <div id="belege-liste" class="belege-liste"><h3>Dokumente (0)</h3><div id="belege-container"></div></div>
+</section>
 
-        <!-- PANEL 7: PDF -->
-        <section id="pdf-panel" class="panel-input hidden">
-            <h2>📄 PDF Export</h2>
-            <p style="margin-bottom:1rem;">Generieren Sie ein druckfertiges Dokument.</p>
-            <label>Name Person A</label>
-            <input type="text" id="pdf-name-a" class="steuer-input" placeholder="Nachname, Vorname" style="margin-bottom:0.5rem;">
-            <label>Name Person B</label>
-            <input type="text" id="pdf-name-b" class="steuer-input" placeholder="Nachname, Vorname" style="margin-bottom:0.5rem;">
-            <label>Sprache / Idioma</label>
-            <select id="pdf-sprache" class="steuer-input" style="margin-bottom:0.5rem;">
-                <option value="DE">Deutsch</option>
-                <option value="ES">Espanol</option>
-            </select>
-            <button id="btn-pdf-generieren" class="btn-upload" style="width:100%; margin-bottom:0.5rem;">📄 PDF generieren</button>
-            <button id="btn-pdf-herunterladen" class="btn-upload" style="width:100%; background:#2e7d32; display:none;">📥 PDF herunterladen</button>
-            <div id="pdf-vorschau" style="margin-top:1rem; padding:1rem; background:#f5f5f5; border-radius:8px; font-family:monospace; font-size:0.8rem; white-space:pre-wrap; max-height:400px; overflow-y:auto; display:none;"></div>
-        </section>
+<!-- PANEL 6: ELSTER -->
+<section id="elster-panel" class="panel-input hidden">
+    <h2>📤 ELSTER Export</h2>
+    <label>Steuer-ID Person A (11 Ziffern)</label><input type="text" id="elster-steuerid-a" class="steuer-input" placeholder="12345678901" maxlength="11">
+    <label>Steuer-ID Person B</label><input type="text" id="elster-steuerid-b" class="steuer-input" placeholder="12345678901" maxlength="11">
+    <label>IBAN</label><input type="text" id="elster-iban" class="steuer-input" placeholder="DE...">
+    <button id="btn-elster-generieren" class="btn-upload" style="width:100%;margin-top:0.5rem;">📄 XML generieren</button>
+    <button id="btn-elster-herunterladen" class="btn-upload" style="width:100%;background:#2e7d32;display:none;">📥 XML herunterladen</button>
+    <div id="elster-status" style="margin-top:1rem;padding:0.75rem;border-radius:8px;display:none;"></div>
+</section>
 
-        <!-- PANEL DE RESULTADOS -->
-        <section id="result-panel" class="panel-results">
-            <h2>Ergebnis / Resultado</h2>
-            <div class="tax-gauge"><div class="gauge-visual"><div class="gauge-needle" id="gauge-needle"></div></div></div>
-            <div id="ergebnis-details" class="ergebnis-box">
-                <div class="ergebnis-zeile highlight"><span>Einkommensteuer</span><span class="wert" id="wert-steuer">0,00 EUR</span></div>
-                <div class="ergebnis-zeile"><span>Solidaritatszuschlag</span><span class="wert" id="wert-soli">0,00 EUR</span></div>
-                <div class="ergebnis-zeile"><span>Kirchensteuer (9%)</span><span class="wert" id="wert-kirche">0,00 EUR</span></div>
-                <div class="ergebnis-zeile total"><span>Gesamtbelastung</span><span class="wert" id="wert-gesamt">0,00 EUR</span></div>
-            </div>
-            <div id="empfehlung-box" class="empfehlung hidden"><p id="empfehlung-text"></p></div>
-            <button id="btn-berechnen" style="width:100%; margin-top:1rem; padding:0.75rem; background:var(--finanzamt-blau); color:#fff; border:none; border-radius:8px; font-size:1rem; cursor:pointer; font-weight:700;">JETZT BERECHNEN</button>
-        </section>
-    </main>
+<!-- PANEL 7: PDF -->
+<section id="pdf-panel" class="panel-input hidden">
+    <h2>📄 PDF Export</h2>
+    <label>Name Person A</label><input type="text" id="pdf-name-a" class="steuer-input" placeholder="Nachname, Vorname">
+    <label>Name Person B</label><input type="text" id="pdf-name-b" class="steuer-input" placeholder="Nachname, Vorname">
+    <label>Sprache</label><select id="pdf-sprache" class="steuer-input"><option value="DE">Deutsch</option><option value="ES">Espanol</option></select>
+    <button id="btn-pdf-generieren" class="btn-upload" style="width:100%;margin-top:0.5rem;">📄 PDF generieren</button>
+    <button id="btn-pdf-herunterladen" class="btn-upload" style="width:100%;background:#2e7d32;display:none;">📥 PDF herunterladen</button>
+    <div id="pdf-vorschau" style="margin-top:1rem;padding:1rem;background:#f5f5f5;border-radius:8px;font-family:monospace;font-size:0.8rem;white-space:pre-wrap;max-height:400px;overflow-y:auto;display:none;"></div>
+</section>
 
-    <script src="./js/i18n.js"></script>
-    <script src="./js/steuerrechner.js"></script>
-    <script src="./js/storage/steuerDatenbank.js"></script>
-    <script src="./js/storage/syncManager.js"></script>
-    <script src="./js/ocr/lohnsteuerErkenner.js"></script>
-    <script src="./js/ocr/scannerUI.js"></script>
-    <script src="./js/elster/xmlGenerator.js"></script>
-    <script src="./js/elster/ericClient.js"></script>
-    <script src="./js/pruefung/steuerOptimierer.js"></script>
-    <script src="./js/pdf/steuerPdfGenerator.js"></script>
-    <script src="./js/app.js"></script>
+<!-- RESULTADOS -->
+<section id="result-panel" class="panel-results">
+    <h2>Ergebnis / Resultado</h2>
+    <div class="tax-gauge"><div class="gauge-visual"><div class="gauge-needle" id="gauge-needle"></div></div></div>
+    <div class="ergebnis-box">
+        <div class="ergebnis-zeile highlight"><span>Einkommensteuer</span><span class="wert" id="wert-steuer">0,00 EUR</span></div>
+        <div class="ergebnis-zeile"><span>Solidaritatszuschlag</span><span class="wert" id="wert-soli">0,00 EUR</span></div>
+        <div class="ergebnis-zeile"><span>Kirchensteuer (9%)</span><span class="wert" id="wert-kirche">0,00 EUR</span></div>
+        <div class="ergebnis-zeile total"><span>Gesamtbelastung</span><span class="wert" id="wert-gesamt">0,00 EUR</span></div>
+    </div>
+    <div id="empfehlung-box" class="empfehlung hidden"><p id="empfehlung-text"></p></div>
+    <button id="btn-berechnen" style="width:100%;margin-top:1rem;padding:0.75rem;background:#1a237e;color:#fff;border:none;border-radius:8px;font-size:1rem;cursor:pointer;font-weight:700;">JETZT BERECHNEN</button>
+</section>
+
+</main>
+
+<script src="./js/i18n.js"></script>
+<script src="./js/steuerrechner.js"></script>
+<script src="./js/app.js"></script>
 </body>
 </html>
