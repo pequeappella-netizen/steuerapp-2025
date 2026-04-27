@@ -1,0 +1,26 @@
+{
+    "name": "SteuerApp 2025 - Steuererklärung für Ehepaare",
+    "short_name": "SteuerApp",
+    "description": "Assistent für die deutsche Steuererklärung 2025",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#f5f5f5",
+    "theme_color": "#1a237e",
+    "orientation": "any",
+    "lang": "de",
+    "icons": [
+        {
+            "src": "/assets/icons/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/assets/icons/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "categories": ["finance", "utilities"]
+}
