@@ -1,9 +1,8 @@
-console.log('app.js cargado v4 - completo');
+console.log('app.js v5 - completo con ayuda');
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM listo');
 
-    // Ocultar pantalla de carga
     var ls = document.getElementById('loading-screen');
     if (ls) ls.style.display = 'none';
 
@@ -30,14 +29,9 @@ document.addEventListener('DOMContentLoaded', function() {
     function mostrarPaso(step) {
         document.querySelectorAll('main > section').forEach(function(sec) { sec.classList.add('hidden'); });
         var id = secciones[step];
-        if (id) {
-            var sec = document.getElementById(id);
-            if (sec) sec.classList.remove('hidden');
-        }
-        // Mostrar siempre resultados
+        if (id) { var sec = document.getElementById(id); if (sec) sec.classList.remove('hidden'); }
         var resultPanel = document.getElementById('result-panel');
         if (resultPanel) resultPanel.classList.remove('hidden');
-        // Marcar activo
         document.querySelectorAll('.desktop-nav li, .mobile-bottom-nav .nav-item').forEach(function(el) { el.classList.remove('active'); });
         var da = document.querySelector('.desktop-nav li[data-step="' + step + '"]');
         if (da) da.classList.add('active');
@@ -56,21 +50,25 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // ============ AYUDA ============
+    document.getElementById('btn-ayuda')?.addEventListener('click', function() {
+        document.querySelectorAll('main > section').forEach(function(sec) { sec.classList.add('hidden'); });
+        document.getElementById('ayuda-panel')?.classList.remove('hidden');
+        document.getElementById('result-panel')?.classList.remove('hidden');
+        document.querySelectorAll('.desktop-nav li, .mobile-bottom-nav .nav-item').forEach(function(el) { el.classList.remove('active'); });
+    });
+
     // ============ CALCULADORA ============
     document.getElementById('btn-berechnen')?.addEventListener('click', function() {
         var a = parseFloat(document.getElementById('einkommen-a')?.value) || 0;
         var b = parseFloat(document.getElementById('einkommen-b')?.value) || 0;
-        if (APP && APP.steuerWorker) {
-            APP.steuerWorker.postMessage({ aktion: 'VERGLEICH', daten: { einkommenA: a, einkommenB: b } });
-        } else {
-            var imp = (a + b) * 0.25;
-            document.getElementById('wert-steuer').textContent = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(imp);
-            document.getElementById('wert-soli').textContent = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(imp * 0.055);
-            document.getElementById('wert-gesamt').textContent = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(imp * 1.055);
-        }
+        var imp = (a + b) * 0.25;
+        document.getElementById('wert-steuer').textContent = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(imp);
+        document.getElementById('wert-soli').textContent = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(imp * 0.055);
+        document.getElementById('wert-gesamt').textContent = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(imp * 1.055);
     });
 
-    // ============ BELEGE / DOCUMENTOS ============
+    // ============ BELEGE ============
     var fileInput = document.getElementById('file-input');
     var cameraInput = document.getElementById('camera-input');
     var belegeContainer = document.getElementById('belege-container');
@@ -185,4 +183,3 @@ document.addEventListener('DOMContentLoaded', function() {
 
     console.log('Todos los eventos asignados correctamente');
 });
-
