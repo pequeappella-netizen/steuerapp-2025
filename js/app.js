@@ -1,4 +1,4 @@
-console.log('app.js cargado v3');
+console.log('app.js cargado v4 - completo');
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM listo');
@@ -34,6 +34,10 @@ document.addEventListener('DOMContentLoaded', function() {
             var sec = document.getElementById(id);
             if (sec) sec.classList.remove('hidden');
         }
+        // Mostrar siempre resultados
+        var resultPanel = document.getElementById('result-panel');
+        if (resultPanel) resultPanel.classList.remove('hidden');
+        // Marcar activo
         document.querySelectorAll('.desktop-nav li, .mobile-bottom-nav .nav-item').forEach(function(el) { el.classList.remove('active'); });
         var da = document.querySelector('.desktop-nav li[data-step="' + step + '"]');
         if (da) da.classList.add('active');
@@ -56,11 +60,72 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('btn-berechnen')?.addEventListener('click', function() {
         var a = parseFloat(document.getElementById('einkommen-a')?.value) || 0;
         var b = parseFloat(document.getElementById('einkommen-b')?.value) || 0;
-        var imp = (a + b) * 0.25;
-        document.getElementById('wert-steuer').textContent = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(imp);
-        document.getElementById('wert-soli').textContent = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(imp * 0.055);
-        document.getElementById('wert-gesamt').textContent = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(imp * 1.055);
+        if (APP && APP.steuerWorker) {
+            APP.steuerWorker.postMessage({ aktion: 'VERGLEICH', daten: { einkommenA: a, einkommenB: b } });
+        } else {
+            var imp = (a + b) * 0.25;
+            document.getElementById('wert-steuer').textContent = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(imp);
+            document.getElementById('wert-soli').textContent = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(imp * 0.055);
+            document.getElementById('wert-gesamt').textContent = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(imp * 1.055);
+        }
     });
+
+    // ============ BELEGE / DOCUMENTOS ============
+    var fileInput = document.getElementById('file-input');
+    var cameraInput = document.getElementById('camera-input');
+    var belegeContainer = document.getElementById('belege-container');
+    var belegeTitel = document.querySelector('#belege-liste h3');
+    var belegeListe = [];
+
+    function actualizarLista() {
+        if (belegeContainer) {
+            belegeContainer.innerHTML = '';
+            belegeListe.forEach(function(doc, index) {
+                var div = document.createElement('div');
+                div.className = 'beleg-eintrag';
+                div.innerHTML = '<span>' + doc.icon + ' ' + doc.name + ' (' + doc.groesse + ')</span><button class="btn-entfernen" data-index="' + index + '">✕</button>';
+                belegeContainer.appendChild(div);
+            });
+            if (belegeTitel) belegeTitel.textContent = 'Dokumente (' + belegeListe.length + ')';
+            document.querySelectorAll('.btn-entfernen').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    belegeListe.splice(parseInt(this.getAttribute('data-index')), 1);
+                    actualizarLista();
+                });
+            });
+        }
+    }
+
+    function agregarArchivo(file) {
+        if (file.size > 10485760) { alert('Datei zu gro\u00df. Max 10 MB.'); return; }
+        var icon = file.type.includes('pdf') ? '📄' : '🖼️';
+        var groesse = (file.size / 1024).toFixed(1) + ' KB';
+        belegeListe.push({ name: file.name, groesse: groesse, icon: icon, file: file });
+        actualizarLista();
+    }
+
+    document.getElementById('btn-cargar-archivo')?.addEventListener('click', function() { fileInput?.click(); });
+    document.getElementById('btn-escanear')?.addEventListener('click', function() { cameraInput?.click(); });
+
+    fileInput?.addEventListener('change', function() {
+        for (var i = 0; i < this.files.length; i++) agregarArchivo(this.files[i]);
+        this.value = '';
+    });
+    cameraInput?.addEventListener('change', function() {
+        for (var i = 0; i < this.files.length; i++) agregarArchivo(this.files[i]);
+        this.value = '';
+    });
+
+    var dropzone = document.getElementById('dropzone');
+    if (dropzone) {
+        dropzone.addEventListener('dragover', function(e) { e.preventDefault(); this.classList.add('dragover'); });
+        dropzone.addEventListener('dragleave', function() { this.classList.remove('dragover'); });
+        dropzone.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.classList.remove('dragover');
+            for (var i = 0; i < e.dataTransfer.files.length; i++) agregarArchivo(e.dataTransfer.files[i]);
+        });
+    }
 
     // ============ PDF ============
     var btnPdfGen = document.getElementById('btn-pdf-generieren');
@@ -73,7 +138,7 @@ document.addEventListener('DOMContentLoaded', function() {
             var a = parseFloat(document.getElementById('einkommen-a')?.value) || 0;
             var b = parseFloat(document.getElementById('einkommen-b')?.value) || 0;
             var t = sp === 'DE' ? 'STEUERERKLARUNG 2025' : 'DECLARACION DE IMPUESTOS 2025';
-            var txt = t + '\n\nPerson A: ' + nA + ' - ' + a + ' EUR\nPerson B: ' + nB + ' - ' + b + ' EUR\n\nGesamt: ' + (a+b) + ' EUR';
+            var txt = t + '\n\nPerson A: ' + nA + ' - ' + a.toLocaleString('de-DE') + ' EUR\nPerson B: ' + nB + ' - ' + b.toLocaleString('de-DE') + ' EUR\n\nGesamt: ' + (a+b).toLocaleString('de-DE') + ' EUR';
             var vorschau = document.getElementById('pdf-vorschau');
             if (vorschau) { vorschau.style.display = 'block'; vorschau.textContent = txt; }
             if (btnPdfDown) btnPdfDown.style.display = 'block';
@@ -118,5 +183,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    console.log('Todos los eventos asignados');
+    console.log('Todos los eventos asignados correctamente');
 });
+
