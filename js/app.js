@@ -1,4 +1,4 @@
-console.log('app.js v6 FINAL');
+console.log('app.js v6 FINAL con OCR');
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM listo');
@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             this.classList.add('active');
             var lang = this.getAttribute('data-lang');
-            console.log('Cambiando idioma a:', lang);
             if (typeof I18N !== 'undefined') {
                 I18N.setSprache(lang);
             }
@@ -109,84 +108,39 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ============ BELEGE ============
-    var belegeListe = [];
-    var belegeContainer = document.getElementById('belege-container');
-    var belegeTitel = document.querySelector('#belege-liste h3');
+    window.belegeListe = [];
+    window.handleFiles = function(files) {
+        for (var i = 0; i < files.length; i++) {
+            var file = files[i];
+            if (file.size > 10485760) { alert('Archivo demasiado grande. Max 10 MB.'); continue; }
+            var icon = file.type.includes('image') ? '🖼️' : '📄';
+            var groesse = (file.size / 1024).toFixed(1) + ' KB';
+            window.belegeListe.push({ name: file.name, groesse: groesse, icon: icon });
+        }
+        actualizarListaBelege();
+    };
 
     function actualizarListaBelege() {
-        if (!belegeContainer) return;
-        belegeContainer.innerHTML = '';
-        for (var i = 0; i < belegeListe.length; i++) {
-            var doc = belegeListe[i];
+        var container = document.getElementById('belege-container');
+        var titel = document.querySelector('#belege-liste h3');
+        if (!container) return;
+        container.innerHTML = '';
+        for (var i = 0; i < window.belegeListe.length; i++) {
+            var doc = window.belegeListe[i];
             var div = document.createElement('div');
             div.className = 'beleg-eintrag';
             div.innerHTML = '<span>' + doc.icon + ' ' + doc.name + ' (' + doc.groesse + ')</span><button class="btn-entfernen" data-index="' + i + '">✕</button>';
-            belegeContainer.appendChild(div);
+            container.appendChild(div);
         }
-        if (belegeTitel) belegeTitel.textContent = 'Dokumente (' + belegeListe.length + ')';
-        var btnsX = document.querySelectorAll('.btn-entfernen');
-        for (var j = 0; j < btnsX.length; j++) {
-            btnsX[j].addEventListener('click', function() {
+        if (titel) titel.textContent = 'Dokumente (' + window.belegeListe.length + ')';
+        var btns = document.querySelectorAll('.btn-entfernen');
+        for (var j = 0; j < btns.length; j++) {
+            btns[j].onclick = function() {
                 var idx = parseInt(this.getAttribute('data-index'));
-                belegeListe.splice(idx, 1);
+                window.belegeListe.splice(idx, 1);
                 actualizarListaBelege();
-            });
+            };
         }
-    }
-
-    function agregarArchivo(file) {
-        if (file.size > 10485760) { alert('Archivo demasiado grande. Max 10 MB.'); return; }
-        var icon = '📄';
-        if (file.type.includes('image')) icon = '🖼️';
-        var groesse = (file.size / 1024).toFixed(1) + ' KB';
-        belegeListe.push({ name: file.name, groesse: groesse, icon: icon });
-        actualizarListaBelege();
-    }
-
-    var btnCargar = document.getElementById('btn-cargar-archivo');
-    var btnEscanear = document.getElementById('btn-escanear');
-    var fileInput = document.getElementById('file-input');
-    var cameraInput = document.getElementById('camera-input');
-
-    if (btnCargar) {
-        btnCargar.addEventListener('click', function() {
-            console.log('Botón cargar clickeado');
-            if (fileInput) fileInput.click();
-        });
-    }
-    if (btnEscanear) {
-        btnEscanear.addEventListener('click', function() {
-            console.log('Botón escanear clickeado');
-            if (cameraInput) cameraInput.click();
-        });
-    }
-
-    if (fileInput) {
-        fileInput.addEventListener('change', function() {
-            for (var i = 0; i < this.files.length; i++) {
-                agregarArchivo(this.files[i]);
-            }
-            this.value = '';
-        });
-    }
-    if (cameraInput) {
-        cameraInput.addEventListener('change', function() {
-            for (var i = 0; i < this.files.length; i++) {
-                agregarArchivo(this.files[i]);
-            }
-            this.value = '';
-        });
-    }
-
-    var dropzone = document.getElementById('dropzone');
-    if (dropzone) {
-        dropzone.addEventListener('dragover', function(e) { e.preventDefault(); });
-        dropzone.addEventListener('drop', function(e) {
-            e.preventDefault();
-            for (var i = 0; i < e.dataTransfer.files.length; i++) {
-                agregarArchivo(e.dataTransfer.files[i]);
-            }
-        });
     }
 
     // ============ PDF ============
@@ -246,6 +200,117 @@ document.addEventListener('DOMContentLoaded', function() {
             a.href = url; a.download = 'Steuererklaerung_2025.xml';
             a.click(); URL.revokeObjectURL(url);
         });
+    }
+
+    // ============ OCR SMART SCAN ============
+    window.escanearParaPanel = function(panel) {
+        var input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.capture = 'environment';
+        input.onchange = function(e) {
+            var file = e.target.files[0];
+            if (!file) return;
+            mostrarProgresoOCR();
+            reconocerTexto(file, panel);
+        };
+        input.click();
+    };
+
+    function mostrarProgresoOCR() {
+        var div = document.createElement('div');
+        div.id = 'ocr-progress';
+        div.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;padding:2rem;border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,0.2);z-index:9999;text-align:center;';
+        div.innerHTML = '<div class="spinner"></div><p style="margin-top:1rem;">Analizando documento...</p>';
+        document.body.appendChild(div);
+    }
+
+    function ocultarProgresoOCR() {
+        var el = document.getElementById('ocr-progress');
+        if (el) el.remove();
+    }
+
+    function reconocerTexto(file, panel) {
+        var reader = new FileReader();
+        reader.onload = function() {
+            var imgData = reader.result;
+            Tesseract.recognize(imgData, 'deu', {
+                logger: function(info) {
+                    if (info.status === 'recognizing text') {
+                        var prog = document.querySelector('#ocr-progress p');
+                        if (prog) prog.textContent = 'Analizando... ' + Math.round(info.progress * 100) + '%';
+                    }
+                }
+            }).then(function(result) {
+                ocultarProgresoOCR();
+                var texto = result.data.text;
+                console.log('Texto OCR:', texto);
+                var datos = analizarTexto(panel, texto);
+                if (datos) {
+                    rellenarCampos(panel, datos);
+                    alert('✅ Datos extraídos y cargados en el panel ' + panel);
+                } else {
+                    mostrarTextoExtraido(texto, panel);
+                }
+            }).catch(function(err) {
+                ocultarProgresoOCR();
+                alert('Error OCR: ' + err.message);
+            });
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function analizarTexto(panel, texto) {
+        texto = texto || '';
+        var datos = {};
+        if (panel === 'einkommen') {
+            var br = texto.match(/Brutto[\s\S]*?([\d.,]+)\s*(?:€|EUR)/i);
+            var ls = texto.match(/Lohnsteuer[\s\S]*?([\d.,]+)\s*(?:€|EUR)/i);
+            if (br) datos.brutto = parseFloat(br[1].replace(/\./g, '').replace(',', '.'));
+            if (ls) datos.lohnsteuer = parseFloat(ls[1].replace(/\./g, '').replace(',', '.'));
+        } else if (panel === 'versicherung') {
+            var kv = texto.match(/Kranken[\s\S]*?([\d.,]+)\s*(?:€|EUR)/i);
+            var rv = texto.match(/Renten[\s\S]*?([\d.,]+)\s*(?:€|EUR)/i);
+            if (kv) datos.kv = parseFloat(kv[1].replace(/\./g, '').replace(',', '.'));
+            if (rv) datos.rv = parseFloat(rv[1].replace(/\./g, '').replace(',', '.'));
+        } else if (panel === 'haushalt') {
+            var hw = texto.match(/Handwerker[\s\S]*?([\d.,]+)\s*(?:€|EUR)/i);
+            var hh = texto.match(/Haushalts[\s\S]*?([\d.,]+)\s*(?:€|EUR)/i);
+            if (hw) datos.handwerker = parseFloat(hw[1].replace(/\./g, '').replace(',', '.'));
+            if (hh) datos.haushalt = parseFloat(hh[1].replace(/\./g, '').replace(',', '.'));
+        } else if (panel === 'kinder') {
+            var betr = texto.match(/Betreuung[\s\S]*?([\d.,]+)\s*(?:€|EUR)/i);
+            var schul = texto.match(/Schulgeld[\s\S]*?([\d.,]+)\s*(?:€|EUR)/i);
+            var uh = texto.match(/Unterhalt[\s\S]*?([\d.,]+)\s*(?:€|EUR)/i);
+            if (betr) datos.kinderbetreuung = parseFloat(betr[1].replace(/\./g, '').replace(',', '.'));
+            if (schul) datos.schulgeld = parseFloat(schul[1].replace(/\./g, '').replace(',', '.'));
+            if (uh) datos.unterhalt = parseFloat(uh[1].replace(/\./g, '').replace(',', '.'));
+        }
+        return Object.keys(datos).length > 0 ? datos : null;
+    }
+
+    function rellenarCampos(panel, datos) {
+        if (panel === 'einkommen') {
+            if (datos.brutto) document.getElementById('einkommen-a').value = datos.brutto;
+            if (datos.lohnsteuer) document.getElementById('lohnsteuer-a').value = datos.lohnsteuer;
+        } else if (panel === 'versicherung') {
+            if (datos.kv) document.getElementById('kv-a').value = datos.kv;
+            if (datos.rv) document.getElementById('rv-a').value = datos.rv;
+        } else if (panel === 'haushalt') {
+            if (datos.handwerker) document.getElementById('handwerker').value = datos.handwerker;
+            if (datos.haushalt) document.getElementById('haushalt-dienst').value = datos.haushalt;
+        } else if (panel === 'kinder') {
+            if (datos.kinderbetreuung) document.getElementById('kinderbetreuung').value = datos.kinderbetreuung;
+            if (datos.schulgeld) document.getElementById('schulgeld').value = datos.schulgeld;
+            if (datos.unterhalt) document.getElementById('unterhalt').value = datos.unterhalt;
+        }
+    }
+
+    function mostrarTextoExtraido(texto, panel) {
+        var div = document.createElement('div');
+        div.style.cssText = 'position:fixed;top:10%;left:5%;right:5%;bottom:10%;background:white;padding:1rem;border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,0.2);z-index:9999;overflow-y:auto;';
+        div.innerHTML = '<h3>Texto extraído (OCR)</h3><p style="color:#666;">No se detectaron automáticamente los campos. Puede copiar los valores manualmente.</p><pre style="white-space:pre-wrap;background:#f5f5f5;padding:1rem;border-radius:8px;margin:1rem 0;">' + texto + '</pre><button onclick="this.parentElement.remove()" style="background:#1a237e;color:white;border:none;padding:0.7rem 1.5rem;border-radius:30px;font-weight:600;cursor:pointer;">Cerrar</button>';
+        document.body.appendChild(div);
     }
 
     console.log('✅ Todos los eventos asignados');
