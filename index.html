@@ -170,14 +170,14 @@
 <!-- PANEL 5: BELEGE -->
 <section id="belege-panel" class="panel-input hidden">
     <h2>📎 Belege / Documentos adjuntos</h2>
-    <div id="dropzone" class="dropzone">
-        <span class="dropzone-icon">📁</span>
+    <div style="border:2px dashed #bdbdbd;border-radius:12px;padding:1.5rem;text-align:center;margin-bottom:1rem;">
+        <span style="font-size:3rem;">📁</span>
         <p>Arrastre aqui sus documentos</p>
-        <p class="dropzone-sub">PDF, JPG, PNG - max. 10 MB</p>
-        <button id="btn-cargar-archivo" class="btn-upload" type="button">📂 Dateien auswahlen</button>
-        <button id="btn-escanear" class="btn-upload" type="button">📷 Escanear con camara</button>
-        <input type="file" id="file-input" accept=".pdf,.jpg,.jpeg,.png" multiple hidden>
-        <input type="file" id="camera-input" accept="image/*" capture="environment" hidden>
+        <p style="font-size:0.8rem;color:#999;">PDF, JPG, PNG - max. 10 MB</p>
+        <button id="btn-cargar-archivo" style="display:inline-block;margin:0.5rem;padding:0.75rem 1.5rem;background:#1a237e;color:#fff;border:none;border-radius:8px;font-size:1rem;cursor:pointer;" onclick="document.getElementById('file-input').click()">📂 Dateien auswahlen</button>
+        <button id="btn-escanear" style="display:inline-block;margin:0.5rem;padding:0.75rem 1.5rem;background:#1a237e;color:#fff;border:none;border-radius:8px;font-size:1rem;cursor:pointer;" onclick="document.getElementById('camera-input').click()">📷 Escanear con camara</button>
+        <input type="file" id="file-input" accept=".pdf,.jpg,.jpeg,.png" multiple hidden onchange="handleFiles(this.files)">
+        <input type="file" id="camera-input" accept="image/*" capture="environment" hidden onchange="handleFiles(this.files)">
     </div>
     <div id="belege-liste" class="belege-liste"><h3>Dokumente (0)</h3><div id="belege-container"></div></div>
 </section>
